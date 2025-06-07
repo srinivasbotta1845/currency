@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Currency Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background:linear-gradient(20deg,white,blue);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .converter {
+      background: rgb(24, 1, 1);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 10px 10px 100px rgb(249, 248, 248);
+      width: 300px;
+      color:white;
+    }
+    .converter h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .converter input,
+    .converter select,
+    .converter button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+    .result {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+      margin-left:100px;
+      color:rgb(243, 243, 246)
+
+    }
+  </style>
+</head>
+<body>
+
+<div class="converter">
+  <h2>Currency Converter</h2>
+  <input type="number" id="amount" placeholder="Amount" />
+  <select id="fromCurrency">
+    <option value="USD">USD</option>
+    <option value="EUR">EUR</option>
+    <option value="INR">INR</option>
+    <option value="GBP">GBP</option>
+    <option value="JPY">JPY</option>
+  </select>
+  <select id="toCurrency">
+    <option value="INR">INR</option>
+    <option value="USD">USD</option>
+    <option value="EUR">EUR</option>
+    <option value="GBP">GBP</option>
+    <option value="JPY">JPY</option>
+  </select>
+  <button onclick="convertCurrency()">Convert</button>
+  
+</div>
+<div class="result" id="result"></div>
+<script>
+  async function convertCurrency() {
+    const amount = document.getElementById("amount").value;
+    const from = document.getElementById("fromCurrency").value;
+    const to = document.getElementById("toCurrency").value;
+    const resultDiv = document.getElementById("result");
+
+    if (!amount) {
+      resultDiv.innerText = "Please enter an amount.";
+      return;
+    }
+
+    const url = `https://api.exchangerate-api.com/v4/latest/${from}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const rate = data.rates[to];
+      const converted = (amount * rate).toFixed(2);
+      resultDiv.innerText = `${amount} ${from} = ${converted} ${to}`;
+    } catch (error) {
+      resultDiv.innerText = "Error fetching data. Try again later.";
+    }
+  }
+</script>
+
+</body>
+</html>
